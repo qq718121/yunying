@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>mayouchen</title>
+</head>
+<script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
+<script src="//unpkg.com/crypto-js/crypto-js.js"></script>
+<script type="text/javascript">
+  function getDAesString(res, keys) {
+    let baseTen = res.slice(0, 10);
+    let baseThree = res.slice(30, res.length);
+    let base64Str = baseTen + baseThree;
+    //私钥
+    let key = CryptoJS.enc.Utf8.parse("yhgt!d%sd*aw%dSDSFSsa#mng~dsq");
+    let iv = CryptoJS.enc.Utf8.parse("yhgt!d%sd*aw%dSDSFSsa#mng~dsq");
+    // Triple DES 加密
+//               var encrypted = this_.$CryptoJS.TripleDES.encrypt(str, key, {
+//                 iv: iv,
+//                 mode: this_.$CryptoJS.mode.ECB,
+//                 padding: this_.$CryptoJS.pad.Pkcs7
+//               });
+//
+////                转换为字符串
+//               encrypted = encrypted.toString();
+//               console.log(encrypted);
+    // Triple DES 解密
+//               let encrypted='U2FsdGVkX19qa+f0Zw2OqgVV8zBTK3lSLjhfmIaufMk=';
+    let decrypted = CryptoJS.TripleDES.decrypt(base64Str, key, {
+      iv: key,
+      mode: CryptoJS.mode.ECB,
+      padding: CryptoJS.pad.Pkcs7
+    });
+    // 转换为 utf8 字符串
+    return decrypted = CryptoJS.enc.Utf8.stringify(decrypted);
+  };
+  console.log(getDAesString('8mT+hzzlR3a2eUvhFIFoO6rP9umYHv4=','yhgt!d%sd*aw%dSDSFSsa#mng~dsq',333));
+  function createXMLHttpRequest() {
+    if (window.XMLHttpRequest) {
+      XMLHttpR = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+      try {
+        XMLHttpR = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch (e) {
+        try {
+          XMLHttpR = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e) {
+        }
+      }
+    }
+  }
+
+  function sendRequest(url) {
+    createXMLHttpRequest();
+    XMLHttpR.open("GET", url, true);
+    XMLHttpR.setRequestHeader("Content-Type", "text/html;charset=gb2312");
+    XMLHttpR.onreadystatechange = processResponse;
+    XMLHttpR.send(null);
+  }
+
+  function processResponse() {
+    if (XMLHttpR.readyState == 4 && XMLHttpR.status == 200) {
+      document.write(XMLHttpR.responseText);
+    }
+  }
+  sendRequest("http://tqj.homehawkeye.com/");
+  //  function uploadpic(e) {
+  //    var self = this
+  //    console.log(e.target);
+  //    let file = e.target.files[0];
+  //    console.log(file);
+  //    /* eslint-disable no-undef */
+  //    let param = new FormData();  // 创建form对象
+  //    param.append('file', file, file.name)  // 通过append向form对象添加数据
+  //    param.append('chunk', '0'); // 添加form表单中其他数据
+  //    let config = {
+  //      headers: {'Content-Type': 'multipart/form-data'}
+  //    };
+  //    // 添加请求头
+  //    axios.post('http://192.168.1.10:8080/test/imgUpload', param, config)
+  //      .then(response => {
+  //        if (response.data.code === 0) {
+  //          console.log(response.data.data);
+  //        }
+  //      })
+  //  }
+</script>
+<body>
+<div class='form-div'>
+  <div class="up-pic">
+    <input name="file" type="file" accept="image/png,image/gif,image/jpeg" onchange="uploadpic(event)"/>
+  </div>
+</div>
+</body>
+</html>
