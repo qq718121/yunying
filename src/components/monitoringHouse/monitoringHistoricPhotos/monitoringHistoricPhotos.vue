@@ -144,6 +144,7 @@ export default {
   methods: {
     //请求数据方法
     getData() {
+        this.tabLoading = true;
       let [_this, body] = [this, this.filterForm];
       this.$http(
         "/HistoryBuilding/getBuildingList",
@@ -154,6 +155,7 @@ export default {
       ).then(res => {
         if (res.data.code == 0) {
           _this.tableData = res.data.response;
+          _this.tabLoading = false;
         }
       });
     },
@@ -207,7 +209,7 @@ export default {
     },
     cityGetData() {
       let [_this, body] = [this, { id: "" }];
-      _this.tabLoading = true;
+    //   _this.tabLoading = true;
       this.$http(
         "/HistoryBuilding/getHisPicCityInfo",
         { body },
@@ -218,7 +220,7 @@ export default {
         if (res.data.code == 0) {
           _this.provinceIdsList = res.data.response.list;
         }
-        _this.tabLoading = false;
+        // _this.tabLoading = false;
       });
     },
     //触发搜索

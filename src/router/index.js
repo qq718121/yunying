@@ -303,6 +303,12 @@ const activitymanagementSort = function (resolve) {
 
 //首页管理
 
+const HomePageManagement = function (resolve) {
+     require.ensure([], function () {
+          resolve(require('../components/HomePageManagement/HomePageManagement'))
+     })
+}
+
 const addOperateAdminLists = function (resolve) {
      require.ensure([], function () {
           resolve(require('../components/addOperateAdmin/addOperateAdminLists'))
@@ -903,6 +909,10 @@ export default new Router({
                          path: 'theowercirclehome',
                          component: TheOwerCircleHome
                     },
+                    {
+                         path: 'homepagemanagement',
+                         component: HomePageManagement
+                    }
                ]
           },
           {

@@ -25,6 +25,7 @@ Vue.use(VueClipboard)
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
 Vue.prototype.$axios = Axios;
+
 var vue = new Vue({
      el: '#app',
      router,

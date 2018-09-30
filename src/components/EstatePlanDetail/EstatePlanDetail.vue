@@ -349,7 +349,6 @@
 			},
 			//触发上传input
 			choiceFile(type){
-                console.log(type);
                 if(type == 1){
                     this.importExtelUrl = "/buildingMonitor/excelImport"
                 }else if(type ==2){

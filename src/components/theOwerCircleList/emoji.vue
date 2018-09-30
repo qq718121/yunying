@@ -1,15 +1,13 @@
 <template>
-     <div class="emoji">
-          <ul class="emoji-controller">
+     <div class="emojis">
+          <!-- <ul class="emoji-controller">
                <li v-for="(pannel,index) in pannels" :key="index" @click="changeActive(index)" :class="{'active': index === activeIndex}">{{ pannel }}</li>
-          </ul>
-          <ul class="emoji-container">
-               <!-- <li v-for="(emojiGroup, index) in emojis" style="padding: 0" :key="index" v-if="index === activeIndex"> -->
-                    <!-- <a href="javascript:;" v-for="(emoji, index) in emojiGroup" :key="index" @click="selectItem(emoji)">
-                         <span class="emoji-item" :title="emoji" :class="'sprite-' + getPureName(emoji)"></span>
-                    </a> -->
-               <!-- </li> -->
-          </ul>
+          </ul> -->
+          <div class="emoji-container" style="height:100%">
+               <a href="javascript:;" v-for="(item, index) in emojis" :key="index" @click="selectItem(item)">
+                    <span class="emoji emoji-item" :class="`emoji${jEmojis.EMOJI_MAP[item][2]}`" :title="jEmojis.EMOJI_MAP[item][1]"></span>
+               </a>
+          </div>
      </div>
 </template>
 <script>
@@ -21,37 +19,36 @@ export default {
      data() {
           return {
                emojiData: [],
-               pannels: ['表情', '自然', '物品', '地点', '符号'],
-               activeIndex: 0
+               // pannels: ['表情', '自然', '物品', '地点', '符号'],
+               activeIndex: 0,
+               jEmojis: null
           }
      },
      methods: {
-          changeActive(index) {
-               this.activeIndex = index
-          },
-          getPureName(name) {
-               return name.replace(/:/g, '')
-          },
-          selectItem(emoji) {
-               this.$emit('select', emoji)
+          selectItem(item) {
+
+               let emojiU16 = this.jEmojis.EMOJI_MAP[item][0];
+               this.$emit('select', emojiU16, item);
+
           }
      },
      computed: {
           emojis() {
-               return this.pannels.map(item => {
-                    return Object.keys(this.emojiData[item])
-               })
+               return Object.keys(this.jEmojis.EMOJI_MAP)
           }
      },
      created() {
-          console.log(window.jEmoji);
+
+          this.jEmojis = window.jEmoji;
+          console.log(this.jEmojis);
+
      }
 }
 </script>
 
 <style lang='scss' scoped>
 @import "./emoji.css";
-.emoji {
+.emojis {
       width: 380px;
       height: 186px;
       bottom: 30px;

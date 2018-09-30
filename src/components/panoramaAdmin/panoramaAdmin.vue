@@ -9,14 +9,23 @@
             label="楼盘名称"
             min-width="140">
             <template scope="scope">
-                <MjbBuildingSearch :_buildingName.sync="scope.row.buildingName" :_buildingName2="replaceGetBuildingNameList" :_buildingName3.sync="scope.row.buildingId" />
+                <!-- <MjbBuildingSearch :_cityId.sync="_cityId" :_buildingName.sync="scope.row.buildingName" :_buildingName2="replaceGetBuildingNameList" :_buildingName3.sync="scope.row.buildingId" /> -->
+                <div style="display: inline-block">
+                    <el-autocomplete
+                        size="small"
+                        v-model="scope.row.buildingName"
+                        :fetch-suggestions="querySearchAsync"
+                        placeholder="请输入关键词"
+                        @select="handleSelect">
+                    </el-autocomplete>
+                </div>
             </template>
         </el-table-column>
         <el-table-column
             label="全景图片地址"
             min-width="180">
             <template scope="scope">
-                <a :href="scope.row.vrUrl" target="_blank">{{scope.row.vrUrl}}</a>
+                <p style="cursor: pointer;" @click="lookPanorama(scope.row.vrUrl)">{{scope.row.vrUrl}}</p>
             </template>
         </el-table-column>
         <el-table-column
@@ -42,11 +51,16 @@
 </template>
 
 <script>
-import MjbBuildingSearch from "../Common/MjbBuildingSearch/MjbBuildingSearch";
+// import MjbBuildingSearch from "../Common/MjbBuildingSearch/MjbBuildingSearch";
 export default {
     name:'panoramaAdmin',
     components:{
-      MjbBuildingSearch
+    //   MjbBuildingSearch
+    },
+    props:{
+        _cityId:{
+            default:""
+        },
     },
     data(){
         return{
@@ -55,16 +69,30 @@ export default {
                 list:[
                     
                 ]
-            }
+            },
+            addMassage:"",
+            buildingIds:""
         }
     },
     created(){
         this.getData();
+        this.geyairscapeUrl2();
+        this.remoteMethod("")
+    },
+    watch:{
+        '_cityId':{
+            handler:function(val){
+                this.getData();
+                this.remoteMethod("");
+            }
+        }
     },
     methods:{
         getData(){
             let _this = this;
-            this.$http('/buildingOperate/getVRBuidingList',{},{},{},'post').then(function(res){
+            let body = {};
+            body.cid = this._cityId;
+            this.$http('/buildingOperate/getVRBuidingList',{body},{},{},'post').then(function(res){
                 if(res.data.code== 0 ){
                     _this.tableData = res.data.response;
                 }
@@ -73,20 +101,32 @@ export default {
             })
         },
         handleEdit(index,row,type){
-            console.log(row);
             let _this = this;
             if(type ===1){
-                if(!row.buildingId || !row.vrOrder){
+                if(!row.vrOrder){
                     this.$message({
                         type: 'info',
                         message: "有必填项未填写！"
                     });
                     return;
                 }
+                if(!_this.buildingIds && !row.buildingId){
+                        this.$message({
+                            type: 'info',
+                            message: "有必填项未填写！"
+                        });
+                        return;
+                }
                 let body = {};
                 body.id = row.id;
-                body.buildingId = row.buildingId;
+                
                 body.vrOrder = row.vrOrder;
+                body.cid = _this._cityId;
+                if(!_this.buildingIds){
+                    body.buildingId = row.buildingId;
+                }else{
+                     body.buildingId = _this.buildingIds;
+                }
 
                 this.$http('/buildingOperate/editVRBuidingInfo',{body},{},{},'post').then(function(res){
                     if(res.data.code== 0 ){
@@ -94,6 +134,7 @@ export default {
                             type: 'info',
                             message: "保存成功"
                         });
+                        _this.buildingIds = "";
                         _this.getData();
                     }
                 }).catch(function(err){
@@ -123,6 +164,42 @@ export default {
                 })
             }
         },
+        lookPanorama(row){
+            this.geyairscapeUrl2();
+            window.open(row + '&d='+this.addMassage);
+        },
+        geyairscapeUrl2(){
+              let [_this,body] = [this,{}]
+              this.$http('/backstageUser/vrMessageDes',{body},{},{},'post').then(res =>{
+		          if(res.data.code == 0){
+                         _this.addMassage = res.data.response.message;
+		          }
+		        })
+          },
+          //模糊搜索
+			remoteMethod(val){
+				let body = {buildingName: val,cid:this._cityId};
+				this.$http(this.replaceGetBuildingNameList, {body}, {}, {}, 'post').then( res => {
+				  if (res.data.code == 0) {
+                    this.buidingList = res.data.response;
+				  }
+				})
+			},
+			//搜索
+			querySearchAsync(queryString,cb){
+				let buidingList = this.buidingList;
+				var results = queryString ? buidingList.filter(this.createStateFilter(queryString)) : buidingList;
+				cb(results)
+			},
+			createStateFilter(queryString) {
+				return (state) => {
+				  return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0);
+				};
+			},
+			handleSelect(str){
+                // this.$emit('update:_buildingName3',str.key);
+                this.buildingIds = str.key;
+			},
     },
 }
 </script>
@@ -132,3 +209,4 @@ export default {
 </style>
 
 
+    

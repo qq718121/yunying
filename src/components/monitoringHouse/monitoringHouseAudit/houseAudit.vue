@@ -35,7 +35,7 @@
                     </el-select>
                 </el-form-item>
                     <ComGrap :selectLists="filterForm1" :type="1" where="house" v-on:photoL0="checkoutSelect" />
-
+                    
                     <el-form-item label="楼幢数：" v-show="filterForm1.talType == 1 && filterForm1.scoreConfigId.slice(2) == 7">
                       <el-select size="small" v-model="filterForm1.buildingNumber" clearable style="width:150px;" @change="bdmShow('1')">
                         <el-option label="自定义楼幢" value="0"></el-option>
@@ -1223,7 +1223,7 @@ export default {
         this.activeName = this.$route.query.activeName;
         if(this.$store.state.houseAuditSearch){
             this[`filterForm${this.activeName}`] = JSON.parse(
-          this.$store.state.houseAuditSearch
+            this.$store.state.houseAuditSearch
         );
         }
         if (this.$route.query.page || this.$route.query.page == "0") {

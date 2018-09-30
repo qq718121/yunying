@@ -78,7 +78,7 @@
         v-show="tableData.rowCount>0"
         style="margin: 0 auto;text-align:center;margin-top:20px"
         layout="prev, pager, next,jumper"
-        :page-size=5
+        :page-size=10
         :currentPage="currentPage"
         @current-change="currentChange"
         :total="tableData.rowCount">
@@ -126,16 +126,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <!-- 全景管理 -->
-    <div class="top_wap">
-        <p class="addTitle">全景管理</p>
-        <panoramaAdmin />
-    </div>
-    <!-- 运营管理 -->
-    <div class="top_wap">
-        <p class="addTitle">运营管理</p>
-        <addOperateAdmin />
-    </div>
+
 
 
   </div>
@@ -162,8 +153,8 @@ export default {
         is_show_add_wap:false,
         is_show_sort_wap:false,
         navList: [
-          {path: '/estate/estatemanagement', name: '首页'},
-          {path: '/activity/activitymanagement', name: '首页管理'},
+          {path: '', name: '首页'},
+          {path: '/activity/activitymanagement', name: 'banner管理'},
         ],
         addNewForm: {
           pageNum:0,
@@ -180,7 +171,7 @@ export default {
         },
         filterForm:{
           pageNum:0,
-          pageSize:5,
+          pageSize:10,
           id: '',
           name:'',
           webUrl:'',
@@ -211,7 +202,6 @@ export default {
       sortTableDataComput(){
         let _this=this;
         let arr=_.cloneDeep(_this.tableData.list);
-        console.log(arr);
         arr.sort(function(a,b){
           return a.show_sort-b.show_sort
         });
@@ -230,10 +220,12 @@ export default {
         let [_this, body] = [this, this.filterForm];
         _this.is_loading_tab=true;
         this.$http('/buildingCamera/getActivitList',{body},{},{},'post').then(function(res){
-          console.log(res)
           if(res.data.code== 0 ){
             _this.tableData=res.data.response;
-            console.log(_this.tableData);
+            if(res.data.response.list.length<1 && _this.filterForm.pageNum != 0){
+                _this.filterForm.pageNum - 1;
+                _this.getdata();
+            }
           }
           _this.is_loading_tab=false;
         }).catch(function(err){
@@ -243,7 +235,6 @@ export default {
       getdetaildata(){
         let _this=this;
         this.$http('/activitydetail').then(function(res){
-          console.log(res)
           if(res.data.code==1000){
             _this.addNewForm=res.data.data;
           }
@@ -298,7 +289,6 @@ export default {
           type: 'warning'
         }).then(() => {
           if(type == 1){
-            console.log(this.multipleSelection);
             let getId = [];
             for (let i in this.multipleSelection){
               getId.push(this.multipleSelection[i].id);
@@ -344,7 +334,6 @@ export default {
           show_message_success="更新成功!";
           show_message_error="已取消更新";
         }else if(type==3){
-          console.log(_this.tableData.list[index].cityName);
           this.$router.push({
             path: '/activity/activitymanagementadd',
             query: {
@@ -372,7 +361,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          _this.getdata()
+        //   _this.getdata()
           this.$message({
             type: 'success',
             message: show_message_success
@@ -393,14 +382,14 @@ export default {
             let [_this, body] = [this, this.filterForm];
             body.id = _this.tableData.list[index].id;
             this.getDelActivit(body);
-            this.getdata();
+            // this.getdata();
           }else if(type == 2){
             console.log("更新");
             let [_this, body] = [this,{}];
             body.list = [];
             body.list.push(_this.tableData.list[index]);
             this.getUpdateActivitInfo(body);
-            this.getdata();
+            // this.getdata();
           }
         }).catch(() => {
           this.$message({
@@ -411,11 +400,10 @@ export default {
       },
       //添加轮播图/编辑/上下线  请求接口
       getaddActivitList(body){
-        console.log(body)
+        let _this = this;
         this.$http('/buildingCamera/addActivit',{body},{},{},'post').then(function(res){
-          console.log(res)
           if(res.data.code== 0 ){
-            console.log(res);
+            _this.getdata();
           }
         }).catch(function(err){
           console.log(err)
@@ -423,10 +411,10 @@ export default {
       },
       //删除操作
       getDelActivit(body){
+          let _this = this;
         this.$http('/buildingCamera/delActivit',{body},{},{},'post').then(function(res){
-          console.log(res)
           if(res.data.code== 0 ){
-            console.log(res);
+            _this.getdata();
           }
         }).catch(function(err){
           console.log(err)
@@ -434,10 +422,10 @@ export default {
       },
       //更新操作
       getUpdateActivitInfo(body){
+          let _this = this;
         this.$http('/buildingCamera/updateActivitInfo',{body},{},{},'post').then(function(res){
-          console.log(res)
           if(res.data.code== 0 ){
-            console.log(res);
+              _this.getdata();
           }
         }).catch(function(err){
           console.log(err)

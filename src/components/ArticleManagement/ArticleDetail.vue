@@ -10,7 +10,7 @@
               <el-form-item label="作者：">
                 <span v-if="data.author=='' || data.author==null">--</span>
                 <span v-else>{{data.author}}</span>
-              </el-form-item>
+              </el-form-item>Q
               <el-form-item label="来源：">
                 <span v-if="data.source=='' || data.source==null">--</span>
                 <span v-else>{{data.source}}</span>
@@ -147,12 +147,12 @@
               if(res.data.code==0){
                     
                   _this.data = res.data.response;
-                  let reg = /(http:|https:|'')\/\//g;
-                  try{
-                    _this.data.content = _this.data.content.replace(reg,'https://images.weserv.nl/?url=');
-                  }catch(e){
-                    console.log(e)
-                  }
+                //   let reg = /(http:|https:|'')\/\//g;
+                //   try{
+                //     _this.data.content = _this.data.content.replace(reg,'https://images.weserv.nl/?url=');
+                //   }catch(e){
+                //     console.log(e)
+                //   }
                   
                   
                  

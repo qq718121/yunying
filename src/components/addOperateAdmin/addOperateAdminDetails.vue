@@ -89,7 +89,7 @@ export default {
             labelWidth:"",
             currentPage:1,
             navList: [
-                {path: '/activity/activitymanagement', name: '首页'},
+                {path: '/activity/homepagemanagement', name: '运营管理'},
                 {path: '/activity/addoperateadminlists?columnName='+this.$route.query.columnName+'&columnId='+this.$route.query.columnId, name: '文章管理'},
                 {path: '', name: this.$route.query.columnName},
             ],
@@ -123,7 +123,6 @@ export default {
         init(){
             if(this.$route.query.data){
                 this.from = JSON.parse(this.$route.query.data);
-                console.log(this.from);
                 if(this.from.picUrl){   
                     this.preImgSrcList[0].picUrl = this.from.picUrl;
                 }
@@ -166,7 +165,6 @@ export default {
         submitFrom(){
             let body = this.from,
                 _this = this;
-                console.log(this.from);
             if((this.from.newsStatus == "" && this.from.newsStatus != 0) || this.from.titile == "" || this.from.picUrl == "" || this.from.newsOrder == "" || this.from.newsAddress == "" || this.from.abstracts == ""){
                  this.$message({
                     type: 'info',
@@ -176,9 +174,7 @@ export default {
             }
             body.columnId = this.$route.query.columnId;
              this.$http('/buildingOperate/editOperationColumnNews',{body},{},{},'post').then(function(res){
-                console.log(res)
                 if(res.data.code== 0 ){
-                    console.log(res.data);
                     _this.$message({
                         type: 'info',
                         message: "提交成功"

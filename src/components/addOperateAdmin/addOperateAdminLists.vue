@@ -132,8 +132,8 @@ export default {
             labelWidth:"",
             currentPage:1,
             navList: [
-                {path: '/activity/activitymanagement', name: '首页'},
-                {path: '/activity/activitymanagement', name: '首页管理'},
+                {path: '/activity/homepagemanagement', name: '运营管理'},
+                {path: '/activity/homepagemanagement', name: '首页管理'},
                 {path: '', name: this.$route.query.columnName},
             ],
             from:{
@@ -160,7 +160,6 @@ export default {
              let _this = this;
              let body = this.from;
             this.$http('/buildingOperate/getOperationColumnNewsList',{body},{},{},'post').then(function(res){
-                console.log(res)
                 if(res.data.code== 0 ){
                     _this.tableData = res.data.response;
                 }
@@ -196,7 +195,6 @@ export default {
                         body.newsStatus = 1;
                     }
                 this.$http('/buildingOperate/editOperatColumnNewsStatus',{body},{},{},'post').then(function(res){
-                        console.log(res)
                         if(res.data.code== 0 ){
                             _this.$message({
                                 type: 'info',
@@ -241,7 +239,6 @@ export default {
         //改变时间格式
         timeNextChange(val){
             this.from.endTime = val? val:''
-            console.log(val);
         },
     },
 }

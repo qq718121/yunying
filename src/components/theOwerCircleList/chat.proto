@@ -3,17 +3,29 @@ option java_package = "com.test.protobuf";
 option java_outer_classname = "PersonMessage";
 
 message SendMessageRequest {
-     optional string from = 3;
-     optional string to = 2;
+     
+     optional string accessToken = 1;
+     optional string from = 2;
+     optional string to = 3;
      optional string text = 4;
      optional string topic = 5;
-     optional string accessToken = 1;
+
 }
 
 message SendMessageResponse {
+
      required int32 errCode = 1;
      optional string errMsg = 2;
      optional string from = 3;
      optional string text = 4;
      optional string topic = 5;
+
+}
+
+message getMessageResponse {
+
+     optional string topic = 1;
+     optional string content = 2;
+     optional string from  = 3;
+
 }

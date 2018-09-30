@@ -58,6 +58,11 @@ export default {
     components:{
       
     },
+    props:{
+        _cityId:{
+            default:""
+        },
+    },
     data(){
         return{
             dialogVisible:false,
@@ -70,18 +75,28 @@ export default {
             ruleForm:{
                 columnName:'',
                 columnStatus:'',
-                columnOrder:''
+                columnOrder:'',
+                cid:""
             }
         }
     },
     created(){
         this.getData();
     },
+     watch:{
+        '_cityId':{
+            handler:function(val){
+                this.ruleForm.cid = val;
+                this.getData();
+            }
+        }
+    },
     methods:{
         getData(){
             let _this = this;
-            this.$http('/buildingOperate/getOperationColumnList',{},{},{},'post').then(function(res){
-                console.log(res)
+            let body = {};
+            body.cid = this._cityId;
+            this.$http('/buildingOperate/getOperationColumnList',{body},{},{},'post').then(function(res){
                 if(res.data.code== 0 ){
                     _this.tabData = res.data.response;
                 }
@@ -91,7 +106,6 @@ export default {
         },
         // 编辑
         operate(item,index){
-            console.log(item,index);
             this.ruleForm.columnName = item.columnName;
             this.ruleForm.columnStatus = item.columnStatus;
             this.ruleForm.columnOrder = item.columnOrder;
@@ -112,12 +126,9 @@ export default {
                 return;
             }
             let body = this.ruleForm,
-            
             _this = this;
             this.$http('/buildingOperate/editOperationColumn',{body},{},{},'post').then(function(res){
-                console.log(res)
                 if(res.data.code== 0 ){
-                    console.log(res.data);
                     _this.dialogVisible = false;
                     _this.$message({
                         type: 'success',

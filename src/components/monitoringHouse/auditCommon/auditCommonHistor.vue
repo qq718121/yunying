@@ -2,7 +2,7 @@
   <div class="managers">
     <Subnav2 :navList="navList" @refresh=""></Subnav2>
     <div style="padding:20px">
-      <el-tabs v-model="activeName" type="card">
+      <el-tabs v-model="activeName" type="card" v-loading="loading_add" @tab-click="handleClick">
         <el-tab-pane label="待审核" name="1">
           <el-row style="padding:20px 10px 0px 10px;border:1px solid #eee;margin-bottom:20px">
             <el-col :span="22">
@@ -667,6 +667,7 @@ export default {
   data() {
     return {
       EqcList: [],
+      loading_add:false,
       defList: [],
       userList: [],
       bkUserList: [],
@@ -1090,14 +1091,14 @@ export default {
       this.pageCount1 = this.$route.query.imgcount * 1;
     }
     this.getSelectData();
-    this.getData(1);
-    this.getData(2);
-    this.getData(3);
+    
+    // this.getData(2);
+    // this.getData(3);
     this.f_getViewData();
     if (this.$route.query.activeName) {
       this.activeName = this.$route.query.activeName;
     }
-
+    this.getData(this.activeName);
     //      this.getSelectData();
   },
   methods: {
@@ -1416,6 +1417,7 @@ export default {
     },
     //请求数据方法
     getData(type) {
+        this.loading_add = true;
       let [_this, body] = [this, this[`filterForm${type}`]];
       if (this[`filterForm${type}`].adminUps == "0") {
         body.photoUser = this[`filterForm${type}`].uploadUser2;
@@ -1436,6 +1438,7 @@ export default {
           for (let i in _this[`tableData${type}`].PhotoList) {
             _this.$set(_this[`tableData${type}`].PhotoList[i], "isShow", false);
           }
+          _this.loading_add = false;
         }
       });
     },
@@ -1672,10 +1675,9 @@ export default {
       this.f_getViewData();
     },
     //      //tab切换
-    //      handleClick()
-    //      {
-    //      }
-    //      ,
+         handleClick(){
+             this.getData(this.activeName);
+         },
     //触发搜索
     onSearchSubmit(type) {
       // console.log(type);

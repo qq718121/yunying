@@ -374,7 +374,7 @@ export default {
       let _this = this,
         body = { buildingId: this.$route.query.buildingId };
         _this.addForm.brightList2 = [];
-      this.$http("/backstageBuilding/getBuildingInfo", {}, { body }, {}).then(
+      this.$http("/backstageBuilding/selBuildingInfo", {}, { body }, {}).then(
         function(res) {
           if (res.data.code == 0) {
              _this.addForm =Object.assign(_this.addForm, res.data.response);

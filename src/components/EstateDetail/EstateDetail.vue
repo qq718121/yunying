@@ -1047,7 +1047,7 @@ export default {
     getbasicdata() {
       let _this = this,
         body = { buildingId: this.$route.query.buildingId };
-      this.$http("/backstageBuilding/getBuildingInfo", {}, { body }, {}).then(
+      this.$http("/backstageBuilding/selBuildingInfo", {}, { body }, {}).then(
         function(res) {
           if (res.data.code == 0) {
             _this.houseBasicData = res.data.response;

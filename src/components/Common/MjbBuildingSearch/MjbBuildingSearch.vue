@@ -15,12 +15,15 @@
 			_buildingName:{
 				default:'',
 			},
-      _buildingName3:{
-        default:'',
-      },
-			_buildingName2:{
-				default:'/backstageBuilding/getBuildingNameList',
-			}
+            _buildingName3:{
+                default:'',
+            },
+            _buildingName2:{
+                default:'/backstageBuilding/getBuildingNameList',
+            },
+            _cityId:{
+                default:""
+            }
 		},
 		data(){
 			return {
@@ -32,7 +35,6 @@
 		created(){
 			this.replaceGetBuildingNameList = this._buildingName2;
             this.buildingName = this._buildingName;
-            console.log(this._buildingName);
             this.remoteMethod('');
            
 		},
@@ -41,7 +43,12 @@
                 handler:function(val){
 					this.buildingName = val;
 				}
-            }
+            },
+            // _cityId:{
+            //     handler:function(val){
+			// 		this.remoteMethod("");
+			// 	}
+            // }
         },
 		methods:{
 			//模糊搜索
@@ -50,7 +57,6 @@
 				this.$http(this.replaceGetBuildingNameList, {body}, {}, {}, 'post').then( res => {
 				  if (res.data.code == 0) {
                     this.buidingList = res.data.response;
-                    console.log(res.data.response);
 				  }
 				})
 			},
